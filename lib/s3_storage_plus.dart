@@ -1,4 +1,4 @@
-library s3storage;
+library s3storageplus;
 
 export 'src/s3.dart';
 export 'src/s3_errors.dart';

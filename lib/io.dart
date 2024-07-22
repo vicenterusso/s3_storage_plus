@@ -2,9 +2,9 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:path/path.dart' show dirname;
-import 'package:s3_storage/src/s3.dart';
-import 'package:s3_storage/src/s3_errors.dart';
-import 'package:s3_storage/src/s3_helpers.dart';
+import 'package:s3_storage_plus/src/s3.dart';
+import 'package:s3_storage_plus/src/s3_errors.dart';
+import 'package:s3_storage_plus/src/s3_helpers.dart';
 
 extension StorageX on S3Storage {
   // Uploads the object using contents from a file
@@ -74,8 +74,7 @@ extension StorageX on S3Storage {
 
     final localStat = await partFile.stat();
     if (localStat.size != stat.size) {
-      throw StorageError(
-          'Size mismatch between downloaded file and the object');
+      throw StorageError('Size mismatch between downloaded file and the object');
     }
 
     return rename();

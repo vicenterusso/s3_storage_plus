@@ -2,11 +2,11 @@ import 'dart:convert';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
-import 'package:s3_storage/src/s3.dart';
-import 'package:s3_storage/src/s3_client.dart';
-import 'package:s3_storage/src/s3_errors.dart';
-import 'package:s3_storage/src/s3_helpers.dart';
-import 'package:s3_storage/src/utils.dart';
+import 'package:s3_storage_plus/src/s3.dart';
+import 'package:s3_storage_plus/src/s3_client.dart';
+import 'package:s3_storage_plus/src/s3_errors.dart';
+import 'package:s3_storage_plus/src/s3_helpers.dart';
+import 'package:s3_storage_plus/src/utils.dart';
 
 const signV4Algorithm = 'AWS4-HMAC-SHA256';
 
@@ -18,8 +18,7 @@ String signV4(
 ) {
   final signedHeaders = getSignedHeaders(request.headers.keys);
   final hashedPayload = request.headers['x-amz-content-sha256'];
-  final canonicalRequest =
-      getCanonicalRequest(request, signedHeaders, hashedPayload!);
+  final canonicalRequest = getCanonicalRequest(request, signedHeaders, hashedPayload!);
   final stringToSign = getStringToSign(canonicalRequest, requestDate, region);
   final signingKey = getSigningKey(requestDate, region, s3storage.secretKey);
   final credential = getCredential(s3storage.accessKey, region, requestDate);
@@ -42,32 +41,21 @@ String signV2(
   final header =
       '${request.method}\n${md5 ?? ''}\n${contentType ?? ''}\n$date\n${awsHeaders.isNotEmpty ? '${awsHeaders.entries.map((e) => '${e.key}:${e.value}').join('\n')}\n' : ''}$requestPath';
 
-  final sign = Hmac(sha1, utf8.encode(s3storage.secretKey))
-      .convert(utf8.encode(header))
-      .bytes;
+  final sign = Hmac(sha1, utf8.encode(s3storage.secretKey)).convert(utf8.encode(header)).bytes;
   final secret = base64Encode(sign);
 
   return 'AWS ${s3storage.accessKey}:$secret';
 }
 
 List<String> getSignedHeaders(Iterable<String> headers) {
-  const ignored = {
-    'authorization',
-    'content-length',
-    'content-type',
-    'user-agent'
-  };
-  final result = headers
-      .where((header) => !ignored.contains(header.toLowerCase()))
-      .toList();
+  const ignored = {'authorization', 'content-length', 'content-type', 'user-agent'};
+  final result = headers.where((header) => !ignored.contains(header.toLowerCase())).toList();
   result.sort();
   return result;
 }
 
 Map<String, String> getAWSHeader(Map<String, String> headers) {
-  final result = headers.entries
-      .where((header) => header.key.toLowerCase().startsWith('x-amz'))
-      .toList();
+  final result = headers.entries.where((header) => header.key.toLowerCase().startsWith('x-amz')).toList();
   result.sort((a, b) => a.key.compareTo(b.key));
   return Map<String, String>.fromEntries(result);
 }
@@ -142,12 +130,10 @@ String presignSignatureV4(
   int expires,
 ) {
   if (expires < 1) {
-    throw StorageExpiresParamError(
-        'expires param cannot be less than 1 seconds');
+    throw StorageExpiresParamError('expires param cannot be less than 1 seconds');
   }
   if (expires > 604800) {
-    throw StorageExpiresParamError(
-        'expires param cannot be greater than 7 days');
+    throw StorageExpiresParamError('expires param cannot be greater than 7 days');
   }
 
   final iso8601Date = makeDateLong(requestDate);
@@ -171,8 +157,7 @@ String presignSignatureV4(
     }),
   );
 
-  final canonicalRequest =
-      getCanonicalRequest(request, signedHeaders, 'UNSIGNED-PAYLOAD');
+  final canonicalRequest = getCanonicalRequest(request, signedHeaders, 'UNSIGNED-PAYLOAD');
 
   final stringToSign = getStringToSign(canonicalRequest, requestDate, region);
   final signingKey = getSigningKey(requestDate, region, s3storage.secretKey);

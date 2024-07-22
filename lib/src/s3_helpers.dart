@@ -2,9 +2,9 @@ import 'package:convert/convert.dart';
 import 'package:http/http.dart';
 import 'package:intl/intl.dart';
 import 'package:mime/mime.dart' show lookupMimeType;
-import 'package:s3_storage/src/s3_client.dart';
-import 'package:s3_storage/src/s3_errors.dart';
-import 'package:s3_storage/src/s3_models_generated.dart';
+import 'package:s3_storage_plus/src/s3_client.dart';
+import 'package:s3_storage_plus/src/s3_errors.dart';
+import 'package:s3_storage_plus/src/s3_models_generated.dart';
 import 'package:xml/xml.dart' as xml;
 
 bool isValidBucketName(String bucket) {
@@ -38,8 +38,7 @@ bool isValidPrefix(String prefix) {
 }
 
 bool isAmazonEndpoint(String endpoint) {
-  return endpoint == 's3.amazonaws.com' ||
-      endpoint == 's3.cn-north-1.amazonaws.com.cn';
+  return endpoint == 's3.amazonaws.com' || endpoint == 's3.cn-north-1.amazonaws.com.cn';
 }
 
 bool isVirtualHostStyle(String endpoint, bool useSSL, String? bucket) {
@@ -102,8 +101,7 @@ int implyPort(bool ssl) {
   return ssl ? 443 : 80;
 }
 
-String dateV2(DateTime time) =>
-    '${DateFormat('EEE, dd MMM y HH:mm:ss').format(time)} GMT';
+String dateV2(DateTime time) => '${DateFormat('EEE, dd MMM y HH:mm:ss').format(time)} GMT';
 
 String makeDateLong(DateTime date) {
   final isoDate = date.toIso8601String();
@@ -121,17 +119,13 @@ String makeDateShort(DateTime date) {
   final isoDate = date.toIso8601String();
 
   // 'YYYYMMDD'
-  return isoDate.substring(0, 4) +
-      isoDate.substring(5, 7) +
-      isoDate.substring(8, 10);
+  return isoDate.substring(0, 4) + isoDate.substring(5, 7) + isoDate.substring(8, 10);
 }
 
 Map<String, String> prependXAMZMeta(Map<String, String?> metadata) {
   final newMetadata = Map<String, String>.from(metadata);
   for (var key in metadata.keys) {
-    if (!isAmzHeader(key) &&
-        !isSupportedHeader(key) &&
-        !isStorageclassHeader(key)) {
+    if (!isAmzHeader(key) && !isSupportedHeader(key) && !isStorageclassHeader(key)) {
       newMetadata['x-amz-meta-' + key] = newMetadata[key]!;
       newMetadata.remove(key);
     }
@@ -166,9 +160,7 @@ bool isStorageclassHeader(key) {
 Map<String, String> extractMetadata(Map<String, String> metaData) {
   var newMetadata = <String, String>{};
   for (var key in metaData.keys) {
-    if (isSupportedHeader(key) ||
-        isStorageclassHeader(key) ||
-        isAmzHeader(key)) {
+    if (isSupportedHeader(key) || isStorageclassHeader(key) || isAmzHeader(key)) {
       if (key.toLowerCase().startsWith('x-amz-meta-')) {
         newMetadata[key.substring(11, key.length)] = metaData[key]!;
       } else {
@@ -212,8 +204,7 @@ Future<void> validateStreamed(
 
   if (expect != null && streamedResponse.statusCode != expect) {
     final response = await StorageResponse.fromStream(streamedResponse);
-    throw StorageS3Error(
-        '$expect expected, got ${streamedResponse.statusCode}', null, response);
+    throw StorageS3Error('$expect expected, got ${streamedResponse.statusCode}', null, response);
   }
 }
 
@@ -233,8 +224,7 @@ void validate(StorageResponse response, {int? expect}) {
   }
 
   if (expect != null && response.statusCode != expect) {
-    throw StorageS3Error(
-        '$expect expected, got ${response.statusCode}', null, response);
+    throw StorageS3Error('$expect expected, got ${response.statusCode}', null, response);
   }
 }
 
@@ -258,9 +248,7 @@ final _pathIgnoredChars = {
 String encodePath(Uri uri) {
   final result = StringBuffer();
   for (var char in uri.path.codeUnits) {
-    if (_A <= char && char <= _Z ||
-        _a <= char && char <= _z ||
-        _0 <= char && char <= _9) {
+    if (_A <= char && char <= _Z || _a <= char && char <= _z || _0 <= char && char <= _9) {
       result.writeCharCode(char);
       continue;
     }

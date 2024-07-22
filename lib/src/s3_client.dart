@@ -3,17 +3,16 @@ import 'dart:convert';
 import 'dart:typed_data';
 
 import 'package:http/http.dart';
-import 'package:s3_storage/s3_storage.dart';
-import 'package:s3_storage/src/aws_endpoints.dart';
-import 'package:s3_storage/src/s3_helpers.dart';
-import 'package:s3_storage/src/s3_sign.dart';
-import 'package:s3_storage/src/utils.dart';
+import 'package:s3_storage_plus/s3_storage_plus.dart';
+import 'package:s3_storage_plus/src/aws_endpoints.dart';
+import 'package:s3_storage_plus/src/s3_helpers.dart';
+import 'package:s3_storage_plus/src/s3_sign.dart';
+import 'package:s3_storage_plus/src/utils.dart';
 
 import 's3.dart';
 
 class StorageRequest extends BaseRequest {
-  StorageRequest(String method, Uri url, {this.onProgress})
-      : super(method, url);
+  StorageRequest(String method, Uri url, {this.onProgress}) : super(method, url);
 
   dynamic body;
 
@@ -144,8 +143,7 @@ class StorageClient {
 
     region ??= 'us-east-1';
 
-    final request = getBaseRequest(
-        method, bucket, object, region, resource, queries, headers, onProgress);
+    final request = getBaseRequest(method, bucket, object, region, resource, queries, headers, onProgress);
     request.body = payload;
 
     final date = DateTime.now().toUtc();
@@ -165,10 +163,8 @@ class StorageClient {
         'user-agent': s3storage.userAgent,
         'date': toRfc7231Time(date),
       });
-      final authorization = signV2(s3storage, request, date,
-          request.url.toString().replaceAll(request.url.origin, ''),
-          md5: request.headers['Content-MD5'],
-          contentType: request.headers['Content-Type']);
+      final authorization = signV2(s3storage, request, date, request.url.toString().replaceAll(request.url.origin, ''),
+          md5: request.headers['Content-MD5'], contentType: request.headers['Content-Type']);
 
       request.headers['authorization'] = authorization;
     }

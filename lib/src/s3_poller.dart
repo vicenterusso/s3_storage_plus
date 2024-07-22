@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'dart:convert';
 
-import 'package:s3_storage/src/s3_client.dart';
+import 'package:s3_storage_plus/src/s3_client.dart';
 
 class NotificationPoller {
   NotificationPoller(

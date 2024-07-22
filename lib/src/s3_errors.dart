@@ -1,6 +1,6 @@
-import 'package:s3_storage/models.dart';
-import 'package:s3_storage/src/s3_client.dart';
-import 'package:s3_storage/src/s3_helpers.dart';
+import 'package:s3_storage_plus/models.dart';
+import 'package:s3_storage_plus/src/s3_client.dart';
+import 'package:s3_storage_plus/src/s3_helpers.dart';
 
 class StorageError {
   StorageError(this.message);

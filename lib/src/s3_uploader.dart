@@ -4,11 +4,11 @@ import 'dart:typed_data';
 
 import 'package:convert/convert.dart';
 import 'package:crypto/crypto.dart';
-import 'package:s3_storage/models.dart';
-import 'package:s3_storage/s3_storage.dart';
-import 'package:s3_storage/src/s3_client.dart';
-import 'package:s3_storage/src/s3_helpers.dart';
-import 'package:s3_storage/src/utils.dart';
+import 'package:s3_storage_plus/models.dart';
+import 'package:s3_storage_plus/s3_storage_plus.dart';
+import 'package:s3_storage_plus/src/s3_client.dart';
+import 'package:s3_storage_plus/src/s3_helpers.dart';
+import 'package:s3_storage_plus/src/utils.dart';
 
 class StorageUploader implements StreamConsumer<Uint8List> {
   StorageUploader(
@@ -92,8 +92,7 @@ class StorageUploader implements StreamConsumer<Uint8List> {
   @override
   Future<String?> close() async {
     if (_uploadId == null) return _etag;
-    return s3storage.completeMultipartUpload(
-        bucket, object, _uploadId!, _parts.keys.toList());
+    return s3storage.completeMultipartUpload(bucket, object, _uploadId!, _parts.keys.toList());
   }
 
   Map<String, String> getHeaders(List<int> chunk) {
@@ -132,15 +131,12 @@ class StorageUploader implements StreamConsumer<Uint8List> {
 
   Future<void> _initMultipartUpload() async {
     if (_uploadId == null) {
-      _uploadId =
-          await s3storage.initiateNewMultipartUpload(bucket, object, metadata);
+      _uploadId = await s3storage.initiateNewMultipartUpload(bucket, object, metadata);
       return;
     }
 
     final parts = s3storage.listParts(bucket, object, _uploadId!);
-    final entries = await parts
-        .asyncMap((part) => MapEntry(part.partNumber, part))
-        .toList();
+    final entries = await parts.asyncMap((part) => MapEntry(part.partNumber, part)).toList();
     _oldParts = Map.fromEntries(entries);
   }
 

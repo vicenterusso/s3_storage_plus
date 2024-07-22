@@ -4,16 +4,6 @@
 
 This is the _unofficial_ S3 (AWS, MinIO) Dart Client SDK that provides simple APIs to access any Amazon S3 compatible object storage server.
 
-<p align="center">
-  <a href="https://github.com/MindMayhem/s3_storage/actions/workflows/dart.yml">
-    <img src="https://github.com/MindMayhem/s3_storage/workflows/Dart/badge.svg">
-  </a>
-  <a href="https://pub.dev/packages/s3_storage">
-    <img src="https://img.shields.io/pub/v/s3_storage">
-  </a>
-</p>
-
-
 ## API
 
 | Bucket operations       | Object operations        | Presigned operations  | Bucket Policy & Notification operations |
@@ -67,8 +57,8 @@ final s3_storage = S3Storage(
 
 **File upload**
 ```dart
-import 'package:s3_storage/io.dart';
-import 'package:s3_storage/s3_storage.dart';
+import 'package:s3_storage_plus/io.dart';
+import 'package:s3_storage_plus/s3_storage_plus.dart';
 
 void main() async {
   final s3_storage = S3Storage(
@@ -83,11 +73,11 @@ void main() async {
 
 For complete example, see: [example]
 
-> To use `fPutObject()` and `fGetObject`, you have to `import 'package:s3_storage/io.dart';`
+> To use `fPutObject()` and `fGetObject`, you have to `import 'package:s3_storage_plus/io.dart';`
 
 **Upload with progress**
 ```dart
-import 'package:s3_storage/s3_storage.dart';
+import 'package:s3_storage_plus/s3_storage_plus.dart';
 
 void main() async {
   final s3_storage = S3Storage(
@@ -109,7 +99,7 @@ void main() async {
 
 ```dart
 import 'dart:io';
-import 'package:s3_storage/s3_storage.dart';
+import 'package:s3_storage_plus/s3_storage_plus.dart';
 
 void main() async {
   final s3_storage = S3Storage(

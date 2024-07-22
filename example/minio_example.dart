@@ -1,6 +1,6 @@
 import 'dart:io';
 
-import 'package:s3_storage/s3_storage.dart';
+import 'package:s3_storage_plus/s3_storage_plus.dart';
 
 void main() async {
   final s3storage = S3Storage(
@@ -10,7 +10,6 @@ void main() async {
     secretKey: 'zuf+tfteSlswRu7BJ86wekitnifILbZam1KYY3TG',
   );
 
-  print(await s3storage.putObject('aaaaaaaaa', 'test.png',
-      File('example/custed.png').readAsBytes().asStream(),
+  print(await s3storage.putObject('aaaaaaaaa', 'test.png', File('example/custed.png').readAsBytes().asStream(),
       metadata: {'test': 'works'}));
 }
