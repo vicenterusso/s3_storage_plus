@@ -22,7 +22,7 @@ class S3Storage {
     required this.endPoint,
     required this.accessKey,
     required this.secretKey,
-    this.signingType = SigningType.V2,
+    this.signingType = SigningType.V4,
     int? port,
     this.useSSL = true,
     this.userAgent = 's3-storage-dart',
